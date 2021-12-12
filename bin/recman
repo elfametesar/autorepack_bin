@@ -1,0 +1,2 @@
+cd /data/local/autorepack
+unmute="$(bash recovery_manager.sh)"

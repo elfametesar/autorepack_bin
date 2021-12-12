@@ -1,0 +1,50 @@
+#!/bin/sh
+
+clear
+cd /data/local/autorepack
+git="bin/git"
+$git remote update &> /dev/null
+$git restore . &> /dev/null
+
+fetch_updates()
+    $git fetch &> /dev/null
+    commits="$($git log --pretty=format:'%s - %an (%cr)' --abbrev-commit --date=relative master..origin/master)"
+
+check_updates(){
+    echo
+    echo -e "\e[3mChecking for updates...\e[0m"
+    fetch_updates
+    echo
+    if [ ! -z "$commits" ]; then
+        echo -e "\e[1mUpdates:\e[0m"
+        while read line; do
+            echo -e "\e[3m ◍ $(echo $line| awk '{print toupper(substr($0,0,1))tolower(substr($0,2))}')\e[0m"
+        done <<< $commits
+        echo
+        echo -e "\e[1mType in 'update now' to receive the updates.\e[0m"
+        echo
+    else
+        echo -e "\e[3mYou are currently up-to-date.\e[0m"
+        echo
+    fi
+}
+
+update(){
+    clear
+    echo
+    [ -z "$commits" ] && echo -e "\e[3mYou are already up-to-date.\e[0m" && exit || unset commits
+    echo -e "\e[3mUpdating...\e[0m"
+    $git pull &> /dev/null
+    fetch_updates
+    echo $commits
+    [ -z "$commits" ] && echo -e "\e[3mSuccessfully updated.\e[0m" && echo || echo -e "\e[3mProblems occured during update. Here's the full output:\n\n\e[0m$($git pull)"
+    echo
+}
+
+if [ -z "$1" ]; then
+    check_updates
+elif [ "$1" == "now" ]; then
+    update
+else
+    echo "Invalid argument. You have to type in 'update' to check and 'update now' to receive the updates."
+fi
