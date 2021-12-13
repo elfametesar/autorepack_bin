@@ -41,10 +41,26 @@ update(){
     echo
 }
 
+fetch_history(){
+    commits=$(git log | sed 's/^[a-zA-Z].*$//; /^$/ d')
+    if [ ! -z "$commits" ]; then
+        echo -e "\e[1mPast Updates:\e[0m"
+        while read line; do
+            echo -e "\e[3m ◍ $(echo $line| awk '{print toupper(substr($0,0,1))tolower(substr($0,2))}')\e[0m"
+        done <<< $commits
+        echo
+    else
+        echo -e "\e[3mNo past history found.\e[0m"
+        echo
+    fi
+}
+
 if [ -z "$1" ]; then
     check_updates
 elif [ "$1" == "now" ]; then
     update
+elif [ "$1" == "--history" ]; then
+    fetch_history
 else
     echo "Invalid argument. You have to type in 'update' to check and 'update now' to receive the updates."
 fi
