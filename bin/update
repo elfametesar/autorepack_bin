@@ -42,7 +42,7 @@ update(){
 }
 
 fetch_history(){
-    commits=$(git log | sed 's/^[a-zA-Z].*$//; /^$/ d')
+    commits=$(git log --reverse | sed 's/^[a-zA-Z].*$//; /^$/ d')
     if [ ! -z "$commits" ]; then
         echo -e "\e[1mPast Updates:\e[0m"
         while read line; do
