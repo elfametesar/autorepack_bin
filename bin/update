@@ -37,8 +37,13 @@ update(){
     echo -e "\e[3mUpdating...\e[0m"
     $git pull &> /dev/null
     fetch_updates
-    echo $commits
-    [ -z "$commits" ] && echo -e "\e[3mSuccessfully updated.\e[0m" && echo || echo -e "\e[3mProblems occured during update. Here's the full output:\n\n\e[0m$($git pull)"
+    if [ -z "$commits" ]; then
+        cp /data/adb/modules/autorepacker/system/bin/* /system/bin/ &> /dev/null
+        echo -e "\e[3mSuccessfully updated.\e[0m"
+        echo
+    else
+        echo -e "\e[3mProblems occured during update. Here's the full output:\n\n\e[0m$($git pull)"
+    fi
     echo
 }
 
