@@ -8,7 +8,7 @@ $git restore . &> /dev/null
 
 fetch_updates(){
     $git fetch &> /dev/null
-    commits="$($git log --pretty=format:'%s - %an (%cr)' --abbrev-commit --date=relative master..origin/master)"
+    commits="$($git log --pretty=format:'%s - %an (%cr)' --abbrev-commit --date=relative master)"
 }
 
 check_updates(){
