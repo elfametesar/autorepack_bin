@@ -2,13 +2,16 @@
 
 clear
 cd /data/local/autorepack
-git="bin/git"
+git="/data/data/com.termux/files/usr/bin/git"
 $git remote update &> /dev/null
 $git restore . &> /dev/null
 
 fetch_updates(){
     $git fetch &> /dev/null
-    commits="$($git log --pretty=format:'%s - %an (%cr)' --abbrev-commit --date=relative master)"
+    commits="$($git log --pretty=format:"%s~" --date=relative master..origin/master)"
+    cd /data/adb/modules/autorepacker/system/bin/
+    $git fetch &> /dev/null
+    commits+="$($git log --pretty=format:%s~ --date=relative master..origin/master)"
 }
 
 check_updates(){
@@ -18,9 +21,7 @@ check_updates(){
     echo
     if [ ! -z "$commits" ]; then
         echo -e "\e[1mUpdates:\e[0m"
-        while read line; do
-            echo -e "\e[3m ◍ $(echo $line| awk '{print toupper(substr($0,0,1))tolower(substr($0,2))}')\e[0m"
-        done <<< $commits
+        awk -F '~' '{for(i=1; i<=NF-1; i++){ print "\033[3m ◍ " toupper(substr($i,0,1))tolower(substr($i,2))"\033[0m"}}' <<< "$commits"
         echo
         echo -e "\e[1mType in 'update now' to receive the updates.\e[0m"
         echo
@@ -33,17 +34,13 @@ check_updates(){
 update(){
     clear
     echo
+    fetch_updates
     [ -z "$commits" ] && echo -e "\e[3mYou are already up-to-date.\e[0m" && exit || unset commits
     echo -e "\e[3mUpdating...\e[0m"
     $git pull &> /dev/null
     fetch_updates
-    if [ -z "$commits" ]; then
-        cp /data/adb/modules/autorepacker/system/bin/* /system/bin/ &> /dev/null
-        echo -e "\e[3mSuccessfully updated.\e[0m"
-        echo
-    else
-        echo -e "\e[3mProblems occured during update. Here's the full output:\n\n\e[0m$($git pull)"
-    fi
+    echo $commits
+    [ -z "$commits" ] && echo -e "\e[3mSuccessfully updated.\e[0m" && echo || echo -e "\e[3mProblems occured during update. Here's the full output:\n\n\e[0m$($git pull)"
     echo
 }
 
