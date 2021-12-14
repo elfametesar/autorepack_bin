@@ -38,6 +38,8 @@ update(){
     [ -z "$commits" ] && echo -e "\e[3mYou are already up-to-date.\e[0m" && exit || unset commits
     echo -e "\e[3mUpdating...\e[0m"
     $git pull &> /dev/null
+    cd /data/local/autorepack
+    $git pull &> /dev/null
     fetch_updates
     echo $commits
     [ -z "$commits" ] && echo -e "\e[3mSuccessfully updated.\e[0m" && echo || echo -e "\e[3mProblems occured during update. Here's the full output:\n\n\e[0m$($git pull)"
