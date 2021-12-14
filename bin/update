@@ -6,9 +6,10 @@ git="bin/git"
 $git remote update &> /dev/null
 $git restore . &> /dev/null
 
-fetch_updates()
+fetch_updates(){
     $git fetch &> /dev/null
     commits="$($git log --pretty=format:'%s - %an (%cr)' --abbrev-commit --date=relative master..origin/master)"
+}
 
 check_updates(){
     echo
