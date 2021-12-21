@@ -41,6 +41,7 @@ update(){
     cd /data/local/autorepack
     $git pull &> /dev/null
     fetch_updates
+    chmod -R +x /data/adb/modules/autorepacker/system/bin/
     cp /data/adb/modules/autorepacker/system/bin/* /system/bin/ &> /dev/null
     [ -z "$commits" ] && echo -e "\e[3mSuccessfully updated.\e[0m" && echo || echo -e "\e[3mProblems occured during update. Here's the full output:\n\n\e[0m$($git pull)"
     echo
