@@ -3,6 +3,7 @@
 clear
 cd /data/local/autorepack
 git="/data/data/com.termux/files/usr/bin/git"
+$git switch master &> /dev/null
 $git remote update &> /dev/null
 $git restore . &> /dev/null
 
@@ -48,7 +49,7 @@ update(){
 }
 
 fetch_history(){
-    commits=$(git log --reverse -n 10 | sed 's/^[a-zA-Z].*$//; /^$/ d')
+    commits=$($git log --reverse -n 10 | sed 's/^[a-zA-Z].*$//; /^$/ d')
     if [ ! -z "$commits" ]; then
         echo -e "\e[1mPast Updates:\e[0m"
         while read line; do
@@ -61,10 +62,32 @@ fetch_history(){
     fi
 }
 
+revert(){
+    echo -e "\n\e[1mUPDATE REVERTER\e[0m\n"
+    hashes=$($git log -n 10 | grep '^commit' | cut -d' ' -f2)
+    while [ 0 -eq 0 ]; do
+        tac <<< $history | sed '/Past/ d' | awk '{ print NR")", $0 }' 
+        echo
+        echo -en "\e[3mSelect an update to revert back to: \e[0m" && read number
+        if [[ $number -lt 11 && $number -gt 0 ]]; then
+            $git checkout `sed -n "${number}p" <<< "$hashes"` &> /dev/null
+            echo -e "\e[1;32mReverted updates. If you want to revert this process, simply run update command once\e[0m"
+            break
+        else
+            echo -e "\e[33mNo selection made\e[0m"
+            exit
+        fi
+    done
+}
+
 if [ -z "$1" ]; then
     check_updates
 elif [ "$1" == "now" ]; then
     update
+elif [ "$1" == "--revert" ]; then
+    $git switch master &> /dev/null
+    history="`fetch_history`"
+    revert
 elif [ "$1" == "--history" ]; then
     fetch_history
 else
