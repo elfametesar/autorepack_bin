@@ -98,7 +98,7 @@ case "$1" in
    fetch_history
  ;;
  "--recovery-manager"|"-rm")
-   sh recovery_manager.sh
+   unmute="$(sh recovery_manager.sh)"
  ;;
  *|"--help"|"-h")
     echo -e "\n\033[1;31mUsage: \033[1;1;32mrepack \033[1;37m[ --help, -h ] [ --update, -u ] [ --update-now, -un ], [ --revert, -r ], [ --update-history, -uh ], [ --recovery-manager, -rm ]\033[1;32m\n\n -u  --update\t\t\033[37mLists new updates\n\n \033[1;32m-un --update-now\t\033[37mInstalls the new updates\n\n \033[1;32m-r  --revert\t\t\033[37mRolls back any updates in case of \n\t\t\tcertain problems. It can only \n\t\t\tgo back 10 updates.\n\n \033[1;32m-uh --update-history\t\033[37mLists the last 10 updates\n\n \033[1;32m-rm --recovery-manager\t\033[37mA tool to import, download and remove \n\t\t\trecoveries\n\033[0m"
