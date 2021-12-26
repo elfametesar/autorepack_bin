@@ -3,11 +3,11 @@
 clear
 cd /data/local/autorepack
 git="/data/data/com.termux/files/usr/bin/git"
-$git switch master &> /dev/null
-$git remote update &> /dev/null
-$git restore . &> /dev/null
 
 fetch_updates(){
+    $git switch master &> /dev/null
+    $git remote update &> /dev/null
+    $git restore . &> /dev/null
     $git fetch &> /dev/null
     commits="$($git log --pretty=format:"%s~" --date=relative master..origin/master)"
     cd /data/adb/modules/autorepacker/system/bin/
@@ -91,10 +91,12 @@ case "$1" in
    update
  ;;
  "--revert"|"-r")
+   $git switch master &> /dev/null
    history="`fetch_history`"
    revert
  ;;
  "--update-history"|"-uh")
+   $git switch master &> /dev/null
    fetch_history
  ;;
  "--recovery-manager"|"-rm")
