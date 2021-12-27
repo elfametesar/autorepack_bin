@@ -24,7 +24,7 @@ check_updates(){
         echo -e "\e[1mUpdates:\e[0m"
         awk -F '~' '{for(i=1; i<=NF-1; i++){ print "\033[3m ◍ " toupper(substr($i,0,1))tolower(substr($i,2))"\033[0m"}}' <<< "$commits"
         echo
-        echo -e "\e[1mType in 'update now' to receive the updates.\e[0m"
+        echo -e "\e[1mType in 'repack -un' to receive the updates.\e[0m"
         echo
     else
         echo -e "\e[3mYou are currently up-to-date.\e[0m"
@@ -71,7 +71,7 @@ revert(){
         echo -en "\e[3mSelect an update to revert back to: \e[0m" && read number
         if [[ $number -lt 11 && $number -gt 0 ]]; then
             $git checkout `sed -n "${number}p" <<< "$hashes"` &> /dev/null
-            echo -e "\e[1;32mReverted updates. If you want to revert this process, simply run update command once\e[0m"
+            echo -e "\e[1;32mReverted updates. If you want to revert this process, simply run repack -u command once\e[0m"
             break
         else
             echo -e "\e[1;32mNo selection made\e[0m"
