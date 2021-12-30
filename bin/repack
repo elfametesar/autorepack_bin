@@ -1,4 +1,4 @@
-#!/data/local/autorepack/bin/bash
+#!/bin/sh
 
 clear
 cd /data/local/autorepack
