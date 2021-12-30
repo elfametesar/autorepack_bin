@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/data/local/autorepack/bin/bash
 
 clear
 cd /data/local/autorepack
@@ -82,7 +82,7 @@ revert(){
 
 case "$1" in
  "")
-   sh repack.sh
+   $PREFIX/bin/bash repack.sh
  ;;
  "--update"|"-u")
    check_updates
