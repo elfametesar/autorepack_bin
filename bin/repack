@@ -4,6 +4,10 @@ clear
 cd /data/local/autorepack
 git="/data/data/com.termux/files/usr/bin/git"
 
+{ cp colors.properties $PREFIX/../home/.termux; \
+chown -R $(stat -c%G $PREFIX) $PREFIX/../home/.termux; \
+termux-reload-settings;} &> /dev/null
+
 fetch_updates(){
     $git switch master &> /dev/null
     $git remote update &> /dev/null
